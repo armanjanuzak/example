@@ -1,0 +1,2 @@
+Host 10.0.1.58
+  ProxyCommand ssh -q -A ubuntu@3.213.179.142 nc %h %p

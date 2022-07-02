@@ -1,0 +1,9 @@
+Host ansible
+      HostName ${ansible_ip}
+      User ubuntu
+      IdentityFile ${key}
+      ProxyJump jump
+Host jump
+      HostName ${bastion_ip}
+      User ubuntu
+      IdentityFile ${key}

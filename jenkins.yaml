@@ -1,0 +1,37 @@
+---
+- name: Installing and configuring of Jenkins
+  hosts: ansible
+  tasks:
+  - name: Creating a keyring file
+    ansible.builtin.file:
+      path: /usr/share/keyrings/jenkins-keyring.asc
+      state: touch
+      #owner: root
+      #group: root
+      mode: '0644'
+
+  - name: Add an Apt signing key, uses whichever key is at the URL
+    ansible.builtin.apt_key:
+      url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+      keyring: /usr/share/keyrings/jenkins-keyring.asc
+
+  - name: Add specified repository into sources list using specified filename
+    ansible.builtin.apt_repository:
+      repo: deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/
+      state: present
+      filename: /etc/apt/sources.list.d/jenkins.list
+
+  - name: Run the equivalent of "apt-get update" as a separate step
+    ansible.builtin.apt:
+      update_cache: yes
+
+  - name: Install a list of packages
+    ansible.builtin.apt:
+      pkg:
+      - fontconfig
+      - openjdk-11-jre
+
+  - name: Install jenkins
+    ansible.builtin.apt:
+      name: jenkins
+      state: present
